@@ -9,6 +9,7 @@ const temporizadorBt = document.querySelector("#start-pause");
 const input = document.querySelector("#alternar-musica");
 const textBtStartPause = document.querySelector("#start-pause span");
 const imagemPause = document.querySelector(".app__card-primary-butto-icon");
+const timer = document.querySelector('#timer')
 
 const musica = new Audio("/sons/luna-rise-part-one.mp3");
 const pauseTemporizador = new Audio("/sons/pause.mp3");
@@ -16,7 +17,7 @@ const playTemporizador = new Audio("/sons/play.wav");
 const fimTemporizador = new Audio("/sons/beep.mp3");
 musica.loop = true;
 
-let contagemRegressiva = 5;
+let contagemRegressiva = 1500 ;
 let interval = null;
 
 input.addEventListener("change", () => {
@@ -28,21 +29,25 @@ input.addEventListener("change", () => {
 });
 
 focoBt.addEventListener("click", () => {
+  contagemRegressiva = 1500
   mudarContexto("foco");
   focoBt.classList.add("active");
 });
 
 descansoCurtoBt.addEventListener("click", () => {
+  contagemRegressiva = 300
   mudarContexto("descanso-curto");
   descansoCurtoBt.classList.add("active");
 });
 
 descansoLongoBt.addEventListener("click", () => {
+    contagemRegressiva = 900
   mudarContexto("descanso-longo");
   descansoLongoBt.classList.add("active");
 });
 
 function mudarContexto(contexto) {
+  mostrarTempo()
   botoes.forEach(function (contexto) {
     contexto.classList.remove("active");
   });
@@ -73,13 +78,13 @@ function mudarContexto(contexto) {
 
 const temporizador = () => {
   if (contagemRegressiva <= 0) {
-    // fimTemporizador.play();
+    fimTemporizador.play();
     alert("temporizador finalizado");
     zerar();
     return;
   }
   contagemRegressiva -= 1;
-  console.log(`Temporizador: ${contagemRegressiva}`);
+  mostrarTempo()
 };
 
 temporizadorBt.addEventListener("click", iniciarOuPausar);
@@ -107,3 +112,13 @@ function zerar() {
   clearInterval(interval);
   interval = null;
 }
+
+function mostrarTempo (){
+  const tempo = new Date(contagemRegressiva * 1000)
+  const tempoFormatado = tempo.toLocaleTimeString('pt-Br', {minute: '2-digit', second: '2-digit'})
+  timer.innerHTML = `
+    ${tempoFormatado}
+  `
+}
+
+mostrarTempo()
