@@ -9,6 +9,7 @@ const paragrafoDescricaoTarefa = document.querySelector(
 
 const tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
 let elementoSelecionado = null;
+let liElementoSelecionados = null;
 
 function alterarTarefa() {
   localStorage.setItem("tarefas", JSON.stringify(tarefas));
@@ -57,9 +58,11 @@ function criarElementoTarefa(tarefa) {
     if (elementoSelecionado == tarefa) {
       paragrafoDescricaoTarefa.textContent = "";
       elementoSelecionado = null;
+      liElementoSelecionados = null;
       return;
     }
     elementoSelecionado = tarefa;
+    liElementoSelecionados = li;
     paragrafoDescricaoTarefa.textContent = tarefa.descricao;
     li.classList.add("app__section-task-list-item-active");
   };
@@ -87,4 +90,12 @@ btnAdicionarform.addEventListener("submit", (evento) => {
 tarefas.forEach((tarefa) => {
   const elementoTarefa = criarElementoTarefa(tarefa);
   ulTarefas.append(elementoTarefa);
+});
+
+document.addEventListener("focoFinalizado", () => {
+  if (elementoSelecionado && liElementoSelecionados) {
+    liElementoSelecionados.classList.remove("app__section-task-list-item-active");
+    liElementoSelecionados.classList.add("app__section-task-list-item-complete");
+    liElementoSelecionados.querySelector('button').setAttribute('disabled', 'disabled')
+  }
 });

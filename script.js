@@ -17,7 +17,7 @@ const playTemporizador = new Audio("/sons/play.wav");
 const fimTemporizador = new Audio("/sons/beep.mp3");
 musica.loop = true;
 
-let contagemRegressiva = 1500 ;
+let contagemRegressiva = 15 ;
 let interval = null;
 
 input.addEventListener("change", () => {
@@ -29,7 +29,7 @@ input.addEventListener("change", () => {
 });
 
 focoBt.addEventListener("click", () => {
-  contagemRegressiva = 1500
+  contagemRegressiva = 15
   mudarContexto("foco");
   focoBt.classList.add("active");
 });
@@ -80,6 +80,11 @@ const temporizador = () => {
   if (contagemRegressiva <= 0) {
     fimTemporizador.play();
     alert("temporizador finalizado");
+    const focoAtivo = html.getAttribute('data-contexto') == 'foco'
+      if (focoAtivo) {
+        const novoEvento = new CustomEvent('focoFinalizado')
+        document.dispatchEvent(novoEvento)
+      }
     zerar();
     return;
   }
